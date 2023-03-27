@@ -6,7 +6,11 @@ class ComicsAPIResponse(val items: List<Item>)
 
 data class Item(
     @field:Json(name = "id")
-    val id : String,
+    val id : Int,
     @field:Json(name = "title")
-    val title: String
+    val title: String,
+    @field:Json(name = "description")
+    val description: String,
+    @field:Json(name = "thumbnail")
+    val thumbnail: String
 )

@@ -39,7 +39,7 @@ class NetworkModule {
             .build()
     }
 
-    fun createBooksApi(endpointURL: String): ComicsAPI {
+    fun createComicsApi(endpointURL: String): ComicsAPI {
         val retrofit = getRetrofit(endpointURL)
         return retrofit.create(ComicsAPI::class.java)
     }

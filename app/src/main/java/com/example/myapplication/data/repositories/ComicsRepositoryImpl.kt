@@ -11,7 +11,10 @@ class ComicsRepositoryImpl constructor(
     ) : ComicsRepository {
 
     override suspend fun getComics(): List<ComicResponseModel> {
-        return comicsLocalDataSource.getAll()
+        val localItems = comicsLocalDataSource.getAll()
+        return localItems.ifEmpty {
+            comicsRemoteDataSource.getAll()
+        }
     }
 
     override suspend fun getComic(id: Int): ComicResponseModel? {
