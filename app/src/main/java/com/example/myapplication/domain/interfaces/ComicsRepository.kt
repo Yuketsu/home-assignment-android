@@ -4,5 +4,5 @@ import com.example.myapplication.domain.models.ComicResponseModel
 
 interface ComicsRepository {
     suspend fun getComics(): List<ComicResponseModel>
-    suspend fun getComic(id: String): ComicResponseModel?
+    suspend fun getComic(id: Int): ComicResponseModel?
 }

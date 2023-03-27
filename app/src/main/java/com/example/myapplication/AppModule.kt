@@ -1,6 +1,8 @@
 package com.example.myapplication
 
 import android.content.Context
+import androidx.room.Room
+import com.example.myapplication.data.db.ComicsDatabase
 import com.example.myapplication.data.interfaces.ComicsLocalDataSource
 import com.example.myapplication.data.interfaces.ComicsRemoteDataSource
 import com.example.myapplication.data.repositories.*
@@ -20,7 +22,8 @@ object AppModule {
     @Provides
     @Singleton
     fun providesComicsLocalDatasource(@ApplicationContext context: Context): ComicsLocalDataSource {
-        return ComicsLocalDataSourceImpl()
+        val dao = ComicsDatabase.getDatabase(context).comicDao()
+        return ComicsLocalDataSourceImpl(dao)
     }
 
     @Provides

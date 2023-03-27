@@ -14,7 +14,7 @@ class ComicsRepositoryImpl constructor(
         return comicsLocalDataSource.getAll()
     }
 
-    override suspend fun getComic(id: String): ComicResponseModel? {
+    override suspend fun getComic(id: Int): ComicResponseModel? {
         return comicsLocalDataSource.getOne(id)
     }
 }

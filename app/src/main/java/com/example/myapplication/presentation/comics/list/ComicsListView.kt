@@ -39,7 +39,7 @@ fun ComicsListView(
                     Row(modifier = Modifier.padding(16.dp)) {
                         Text(item.id)
                         Spacer(Modifier.width(5.dp))
-                        Text(item.title)
+                        Text(item.title.orEmpty())
                     }
                     Divider()
                 }

@@ -8,7 +8,7 @@ class ComicsRemoteDataSourceImpl: ComicsRemoteDataSource {
         return emptyList()
     }
 
-    override suspend fun getOne(id: String): ComicResponseModel? {
+    override suspend fun getOne(id: Int): ComicResponseModel? {
         return null
     }
 }

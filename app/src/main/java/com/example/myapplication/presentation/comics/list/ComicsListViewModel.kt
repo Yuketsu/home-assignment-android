@@ -12,13 +12,17 @@ import javax.inject.Inject
 
 data class ComicsListResponseModel(
     val id: String,
-    val title: String,
+    val title: String?,
+    val description: String?,
+    val thumbnail: String?
 )
 
 fun ComicResponseModel.toComicsListResponseModel(): ComicsListResponseModel {
     return ComicsListResponseModel(
         id = id.toString(),
         title = title,
+        description = description,
+        thumbnail = thumbnail
     )
 }
 
