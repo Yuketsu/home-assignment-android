@@ -28,7 +28,7 @@ fun ComicsListView(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Films")
+                    Text("Comics")
                 }
             )
         })
