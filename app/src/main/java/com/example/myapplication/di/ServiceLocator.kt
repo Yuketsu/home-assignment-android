@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.myapplication.BuildConfig
 import com.example.myapplication.data.api.NetworkModule
 import com.example.myapplication.data.db.ComicsDatabase
-import com.example.myapplication.data.interfaces.ComicsLocalDataSource
+import com.example.myapplication.data.interfaces.ComicsDataSource
 import com.example.myapplication.data.mappers.ComicApiResponseMapper
 import com.example.myapplication.data.repositories.ComicsLocalDataSourceImpl
 import com.example.myapplication.data.repositories.ComicsRemoteDataSourceImpl
@@ -40,7 +40,7 @@ class ServiceLocator {
         return newRepo
     }
 
-    private fun createComicsLocalDataSource(context: Context): ComicsLocalDataSource {
+    private fun createComicsLocalDataSource(context: Context): ComicsDataSource {
         val database = database ?: createDataBase(context)
         return ComicsLocalDataSourceImpl(
             database.comicDao()

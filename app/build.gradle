@@ -49,12 +49,12 @@ android {
     productFlavors {
         staging {
             buildConfigField 'String', 'API_KEY', '"1234"'
-            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443/"'
+            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443"'
         }
 
         prod {
             buildConfigField 'String', 'API_KEY', '"1234"'
-            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443/"'
+            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443"'
         }
     }
 }

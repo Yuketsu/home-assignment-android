@@ -1,34 +1,19 @@
 package com.example.myapplication.presentation.film.list
 
-import android.icu.text.CaseMap
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.domain.interfaces.usecases.GetAllComicsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.example.myapplication.domain.models.ComicResponseModel
+import com.example.myapplication.presentation.comics.list.models.ComicsListResponseModel
+import com.example.myapplication.presentation.comics.list.mappers.ComicsListResponseModelMapper
 import java.lang.Exception
 import javax.inject.Inject
 
-data class ComicsListResponseModel(
-    val id: String,
-    val title: String?,
-    val description: String?,
-    val thumbnail: String?
-)
-
-fun ComicResponseModel.toComicsListResponseModel(): ComicsListResponseModel {
-    return ComicsListResponseModel(
-        id = id.toString(),
-        title = title,
-        description = description,
-        thumbnail = thumbnail
-    )
-}
-
 @HiltViewModel
 class ComicsListViewModel @Inject constructor(
-    private val getAllComicsUseCase: GetAllComicsUseCase
+    private val getAllComicsUseCase: GetAllComicsUseCase,
+    private val mapper: ComicsListResponseModelMapper
 ) :
     ViewModel() {
     private val _errorMessage = mutableStateOf("")
@@ -45,7 +30,7 @@ class ComicsListViewModel @Inject constructor(
         try {
             _comics.clear()
             val list = getAllComicsUseCase.execute()
-            _comics.addAll(list.map { it.toComicsListResponseModel() })
+            _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
         } catch (err: Exception) {
             _errorMessage.value = "Error Fetching Comics"
         }
