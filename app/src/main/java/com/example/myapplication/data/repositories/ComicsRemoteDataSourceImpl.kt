@@ -4,8 +4,9 @@ import com.example.myapplication.data.api.ComicsAPI
 import com.example.myapplication.data.interfaces.ComicsDataSource
 import com.example.myapplication.data.mappers.ComicApiResponseMapper
 import com.example.myapplication.domain.models.ComicResponseModel
+import javax.inject.Inject
 
-class ComicsRemoteDataSourceImpl(
+class ComicsRemoteDataSourceImpl @Inject constructor(
     private val service: ComicsAPI,
     private val mapper: ComicApiResponseMapper
     ): ComicsDataSource {

@@ -5,8 +5,9 @@ import com.example.myapplication.data.entities.toComicResponseModel
 import com.example.myapplication.data.interfaces.ComicsDataSource
 import com.example.myapplication.domain.models.ComicResponseModel
 import kotlinx.coroutines.flow.toList
+import javax.inject.Inject
 
-class ComicsLocalDataSourceImpl(private val comicDao: ComicDao): ComicsDataSource {
+class ComicsLocalDataSourceImpl @Inject constructor(private val comicDao: ComicDao): ComicsDataSource {
     override suspend fun getAll(): List<ComicResponseModel> {
         return comicDao.getAll().toList().map { it.toComicResponseModel() }
     }
