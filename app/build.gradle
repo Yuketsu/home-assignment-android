@@ -20,7 +20,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        buildConfigField("String", "API_KEY", API_KEY)
+        buildConfigField("String", "PUBLIC_API_KEY", PUBLIC_API_KEY)
+        buildConfigField("String", "PRIVATE_API_KEY", PRIVATE_API_KEY)
     }
 
     buildTypes {
@@ -49,13 +50,11 @@ android {
     }
     productFlavors {
         staging {
-            buildConfigField 'String', 'API_KEY', '"1234"'
-            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443"'
+            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443/v1/public/"'
         }
 
         prod {
-            buildConfigField 'String', 'API_KEY', '"1234"'
-            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443"'
+            buildConfigField 'String', 'MARVEL_APIS_ENDPOINT', '"https://gateway.marvel.com:443/v1/public/"'
         }
     }
 }
