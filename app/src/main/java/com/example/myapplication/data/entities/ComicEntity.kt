@@ -2,6 +2,7 @@ package com.example.myapplication.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.myapplication.data.api.Thumbnail
 import com.example.myapplication.domain.models.ComicResponseModel
 
 @Entity(tableName = "comic")
@@ -10,7 +11,8 @@ data class ComicEntity(
     val id: Int? = null,
     val title: String?,
     val description: String?,
-    val thumbnail: String?
+    val thumbnailPath: String?,
+    val thumbnailExtension: String?,
 )
 
 fun ComicEntity.toComicResponseModel(): ComicResponseModel {
@@ -18,7 +20,7 @@ fun ComicEntity.toComicResponseModel(): ComicResponseModel {
         id = id!!,
         title = title,
         description = description,
-        thumbnail = thumbnail
+        thumbnail = Thumbnail(path = thumbnailPath, extension = thumbnailExtension)
     )
 }
 
@@ -27,6 +29,7 @@ fun ComicEntity.toComicRoomEntity(): ComicEntity {
         id = id,
         title = title,
         description = description,
-        thumbnail = thumbnail
+        thumbnailPath = thumbnailPath,
+        thumbnailExtension = thumbnailExtension,
     )
 }

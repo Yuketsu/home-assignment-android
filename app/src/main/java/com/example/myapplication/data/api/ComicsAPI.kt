@@ -10,5 +10,5 @@ interface ComicsAPI {
         @Query("ts") ts: String = Constant.ts,
         @Query("hash") hash: String = Constant.hash(),
         @Query("limit") limit: String = Constant.limit
-    ): Response<ComicsAPIResponse>
+    ): Response<ComicResponse>
 }
