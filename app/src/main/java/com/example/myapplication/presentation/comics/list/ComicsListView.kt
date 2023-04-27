@@ -36,9 +36,10 @@ fun ComicsListView(
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 items(vm.comics) { item ->
                     Row(modifier = Modifier.padding(16.dp)) {
-                        Text(item.id)
-                        Spacer(Modifier.width(5.dp))
                         Text(item.title.orEmpty())
+                    }
+                    Row(modifier = Modifier.padding(16.dp)) {
+                        Text(item.description.orEmpty())
                     }
                     Divider()
                 }

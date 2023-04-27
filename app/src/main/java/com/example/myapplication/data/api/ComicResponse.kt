@@ -2,8 +2,6 @@ package com.example.myapplication.data.api
 
 import com.squareup.moshi.Json
 
-//class ComicsAPIResponse(val items: List<Comic>)
-
 data class Comic(
     @field:Json(name = "id")
     val id : Int,
