@@ -29,7 +29,7 @@ class ComicsListViewModel @Inject constructor(
     suspend fun getComics() {
         try {
             _comics.clear()
-            val list = getAllComicsUseCase.execute()
+            val list = getAllComicsUseCase.execute().filter { !it.description.isNullOrEmpty() }
             _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
         } catch (err: Exception) {
             _errorMessage.value = "Error Fetching Comics"
