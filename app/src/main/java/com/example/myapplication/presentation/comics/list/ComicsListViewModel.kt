@@ -3,10 +3,14 @@ package com.example.myapplication.presentation.film.list
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.interfaces.usecases.GetAllComicsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.example.myapplication.presentation.comics.list.models.ComicsListResponseModel
 import com.example.myapplication.presentation.comics.list.mappers.ComicsListResponseModelMapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -29,8 +33,12 @@ class ComicsListViewModel @Inject constructor(
     suspend fun getComics() {
         try {
             _comics.clear()
-            val list = getAllComicsUseCase.execute().filter { !it.description.isNullOrEmpty() }
-            _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
+            viewModelScope.launch(Dispatchers.IO){
+                val list = getAllComicsUseCase.execute().filter { !it.description.isNullOrEmpty() }
+                withContext(Dispatchers.Main){
+                    _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
+                }
+            }
         } catch (err: Exception) {
             _errorMessage.value = "Error Fetching Comics"
         }

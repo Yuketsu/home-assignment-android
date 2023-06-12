@@ -24,12 +24,12 @@ fun ComicEntity.toComicResponseModel(): ComicResponseModel {
     )
 }
 
-fun ComicEntity.toComicRoomEntity(): ComicEntity {
+fun ComicResponseModel.toComicRoomEntity(): ComicEntity {
     return ComicEntity(
         id = id,
         title = title,
         description = description,
-        thumbnailPath = thumbnailPath,
-        thumbnailExtension = thumbnailExtension,
+        thumbnailPath = thumbnail?.path,
+        thumbnailExtension = thumbnail?.extension,
     )
 }

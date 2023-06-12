@@ -14,6 +14,9 @@ class ComicsRemoteDataSourceImpl @Inject constructor(
         val response = service.getComics()
         return mapper.toComicsList(response.body()!!)
     }
+    override suspend fun insert(comics: List<ComicResponseModel>) {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getOne(id: Int): ComicResponseModel? {
         return null

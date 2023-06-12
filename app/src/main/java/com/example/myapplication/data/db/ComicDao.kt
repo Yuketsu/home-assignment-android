@@ -10,7 +10,7 @@ interface ComicDao {
     fun getAll(): List<ComicEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(comic: ComicEntity)
+    suspend fun insert(comics: List<ComicEntity>)
 
     @Query("SELECT * FROM comic WHERE id = :id")
     suspend fun getById(id: Int): ComicEntity?
