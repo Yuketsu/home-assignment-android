@@ -1,30 +1,38 @@
-package com.example.myapplication.data.api
+package com.example.myapplication
 
+import com.example.myapplication.data.api.ComicsAPI
+import com.example.myapplication.data.api.Constant
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import javax.inject.Singleton
 
-class NetworkModule {
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
-
-    private val moshi by lazy {
+    @Provides
+    @Singleton
+    fun getMoshi(): Moshi {
         val moshiBuilder = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
-        moshiBuilder.build()
+        return moshiBuilder.build()
     }
-
-    private val loggingInterceptor by lazy {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        loggingInterceptor
+    @Provides
+    @Singleton
+    fun getInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor()
     }
-
     private fun addApiKeyToRequests(chain: Interceptor.Chain): okhttp3.Response {
         val request = chain.request().newBuilder()
         val originalHttpUrl = chain.request().url
@@ -34,16 +42,21 @@ class NetworkModule {
         return chain.proceed(request.build())
     }
 
-    private val httpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
+    @Provides
+    @Singleton
+    fun getOkHttpClient(): OkHttpClient {
+        val httpBuilder = OkHttpClient.Builder()
             .addInterceptor { chain -> return@addInterceptor addApiKeyToRequests(chain) }
+        return httpBuilder
             .build()
     }
 
-    private fun getRetrofit(endpointURL: String): Retrofit {
+    @Provides
+    @Singleton
+    fun getRetrofit(httpClient: OkHttpClient,
+                    moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(endpointURL)
+            .baseUrl(BuildConfig.MARVEL_APIS_ENDPOINT)
             .client(httpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -51,8 +64,9 @@ class NetworkModule {
             .build()
     }
 
-    fun createComicsApi(endpointURL: String): ComicsAPI {
-        val retrofit = getRetrofit(endpointURL)
+    @Provides
+    @Singleton
+    fun getComicsApi(retrofit: Retrofit): ComicsAPI {
         return retrofit.create(ComicsAPI::class.java)
     }
 }

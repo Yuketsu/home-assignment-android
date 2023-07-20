@@ -1,12 +1,5 @@
 package com.example.myapplication
 
-import android.content.Context
-import com.example.myapplication.data.api.NetworkModule
-import com.example.myapplication.data.db.ComicsDatabase
-import com.example.myapplication.data.interfaces.ComicsDataSource
-import com.example.myapplication.data.mappers.ComicApiResponseMapper
-import com.example.myapplication.data.repositories.ComicsLocalDataSourceImpl
-import com.example.myapplication.data.repositories.ComicsRemoteDataSourceImpl
 import com.example.myapplication.data.repositories.ComicsRepositoryImpl
 import com.example.myapplication.domain.interfaces.ComicsRepository
 import com.example.myapplication.domain.interfaces.usecases.GetAllComicsUseCase
@@ -17,7 +10,6 @@ import com.example.myapplication.presentation.comics.list.mappers.ComicsListResp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -26,10 +18,10 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun comicsRepository(@ApplicationContext context: Context): ComicsRepository {
+    fun comicsRepository(repository: ComicsRepositoryImpl): ComicsRepository {
         // useful because this method can be accessed by multiple threads
         synchronized(this) {
-            return comicsRepository ?: createComicsRepository(context)
+            return repository
         }
     }
 
@@ -39,46 +31,12 @@ object AppModule {
     }
 
     @Provides
-    fun getAllComicsUseCase(@ApplicationContext context: Context): GetAllComicsUseCase {
-        return GetComics(comicsRepository(context))
+    fun getAllComicsUseCase(comicsRepository: ComicsRepository): GetAllComicsUseCase {
+        return GetComics(comicsRepository)
     }
 
     @Provides
-    fun getComicUseCase(@ApplicationContext context: Context): GetComicUseCase {
-        return GetOneComic(comicsRepository(context))
-    }
-
-    private var database: ComicsDatabase? = null
-    private val networkModule by lazy {
-        NetworkModule()
-    }
-
-    @Volatile
-    private var comicsRepository: ComicsRepositoryImpl? = null
-
-    private fun createComicsRepository(context: Context): ComicsRepositoryImpl {
-        val newRepo =
-            ComicsRepositoryImpl(
-                createComicsLocalDataSource(context),
-                ComicsRemoteDataSourceImpl(
-                    networkModule.createComicsApi(BuildConfig.MARVEL_APIS_ENDPOINT),
-                    ComicApiResponseMapper()
-                )
-            )
-        comicsRepository = newRepo
-        return newRepo
-    }
-
-    private fun createComicsLocalDataSource(context: Context): ComicsDataSource {
-        val database = database ?: createDataBase(context)
-        return ComicsLocalDataSourceImpl(
-            database.comicDao()
-        )
-    }
-
-    private fun createDataBase(context: Context): ComicsDatabase {
-        val result = ComicsDatabase.getDatabase(context)
-        database = result
-        return result
+    fun getComicUseCase(comicsRepository: ComicsRepository): GetComicUseCase {
+        return GetOneComic(comicsRepository)
     }
 }

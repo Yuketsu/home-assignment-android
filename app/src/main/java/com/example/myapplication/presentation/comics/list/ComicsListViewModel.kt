@@ -34,7 +34,7 @@ class ComicsListViewModel @Inject constructor(
         try {
             _comics.clear()
             viewModelScope.launch(Dispatchers.IO){
-                val list = getAllComicsUseCase.execute().filter { !it.description.isNullOrEmpty() }
+                val list = getAllComicsUseCase.execute()
                 withContext(Dispatchers.Main){
                     _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
                 }

@@ -12,7 +12,7 @@ class ComicsRepositoryImpl constructor(
     override suspend fun getComics(): List<ComicResponseModel> {
         val localItems = comicsLocalDataSource.getAll()
         return localItems.ifEmpty {
-            val remoteItems = comicsRemoteDataSource.getAll()
+            val remoteItems = comicsRemoteDataSource.getAll().filter { !it.description.isNullOrEmpty() }
             comicsLocalDataSource.insert(remoteItems)
             return remoteItems
         }
