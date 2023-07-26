@@ -2,19 +2,20 @@ package com.example.myapplication.data.db
 
 import androidx.room.*
 import com.example.myapplication.data.entities.ComicEntity
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ComicDao {
     @Query("SELECT * FROM comic")
-    fun getAll(): List<ComicEntity>
+    fun getAll(): Single<List<ComicEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(comics: List<ComicEntity>)
+    fun insert(comics: List<ComicEntity>)
 
     @Query("SELECT * FROM comic WHERE id = :id")
-    suspend fun getById(id: Int): ComicEntity?
+    fun getById(id: Int): ComicEntity?
 
     @Query("DELETE FROM comic WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    fun deleteById(id: Int)
 }

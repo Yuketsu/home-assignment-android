@@ -19,8 +19,7 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun getComicsRepository(comicsAPI: ComicsAPI,
-                            localDataSource: ComicsLocalDataSourceImpl,
+    fun getComicsRepository(localDataSource: ComicsLocalDataSourceImpl,
                             remoteDataSource: ComicsRemoteDataSourceImpl): ComicsRepositoryImpl {
         return ComicsRepositoryImpl(
                 localDataSource,
