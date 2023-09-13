@@ -8,8 +8,10 @@ import com.example.myapplication.domain.interfaces.usecases.GetAllComicsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.example.myapplication.presentation.comics.list.models.ComicsListResponseModel
 import com.example.myapplication.presentation.comics.list.mappers.ComicsListResponseModelMapper
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -34,12 +36,14 @@ class ComicsListViewModel @Inject constructor(
     suspend fun getComics() {
         try {
             _comics.clear()
-                getAllComicsUseCase.execute()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(Schedulers.io())
-                    .subscribe { list ->
+            viewModelScope.launch(Dispatchers.IO){
+                getAllComicsUseCase.execute().collect { comics ->
+                    val list = comics.filter { !it.description.isNullOrEmpty() }
+                    withContext(Dispatchers.Main) {
                         _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
                     }
+                }
+            }
         } catch (err: Exception) {
             _errorMessage.value = "Error Fetching Comics"
         }

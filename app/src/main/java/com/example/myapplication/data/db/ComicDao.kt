@@ -2,13 +2,12 @@ package com.example.myapplication.data.db
 
 import androidx.room.*
 import com.example.myapplication.data.entities.ComicEntity
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ComicDao {
     @Query("SELECT * FROM comic")
-    fun getAll(): Single<List<ComicEntity>>
+    fun getAll(): Flow<List<ComicEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(comics: List<ComicEntity>)

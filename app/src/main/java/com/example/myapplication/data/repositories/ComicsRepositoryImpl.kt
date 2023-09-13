@@ -3,34 +3,27 @@ package com.example.myapplication.data.repositories
 import com.example.myapplication.data.interfaces.ComicsDataSource
 import com.example.myapplication.domain.interfaces.ComicsRepository
 import com.example.myapplication.domain.models.ComicResponseModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 
 class ComicsRepositoryImpl constructor(
     private var comicsLocalDataSource: ComicsDataSource,
     private var comicsRemoteDataSource: ComicsDataSource,
     ) : ComicsRepository {
 
-    override fun getComics(): Observable<List<ComicResponseModel>> {
+    override suspend fun getComics(): Flow<List<ComicResponseModel>> {
         return comicsLocalDataSource.getAll()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(Schedulers.io())
-            .flatMap { localItems ->
-                if (localItems.isEmpty()) {
-                    return@flatMap fetchRemoteComics()
-                } else {
-                    Observable.just(localItems)
-                }
+            .map { localItems ->
+                localItems.ifEmpty {
+                    fetchRemoteComics()
+                } as List<ComicResponseModel>
             }
     }
 
-    private fun fetchRemoteComics(): Observable<List<ComicResponseModel>> {
+    private suspend fun fetchRemoteComics(): Flow<List<ComicResponseModel>> {
         return comicsRemoteDataSource.getAll()
-            .subscribeOn(Schedulers.io())
             .map { remoteItems ->
                 val items = remoteItems.filter { !it.description.isNullOrEmpty() }
                 comicsLocalDataSource.insert(items)
@@ -38,7 +31,7 @@ class ComicsRepositoryImpl constructor(
             }
     }
 
-    override fun getComic(id: Int): ComicResponseModel? {
+    override suspend fun getComic(id: Int): ComicResponseModel? {
         return comicsLocalDataSource.getOne(id)
     }
 }

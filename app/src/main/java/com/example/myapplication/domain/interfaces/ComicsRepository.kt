@@ -1,9 +1,9 @@
 package com.example.myapplication.domain.interfaces
 
 import com.example.myapplication.domain.models.ComicResponseModel
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface ComicsRepository {
-    fun getComics(): Observable<List<ComicResponseModel>>
-    fun getComic(id: Int): ComicResponseModel?
+    suspend fun getComics(): Flow<List<ComicResponseModel>>
+    suspend fun getComic(id: Int): ComicResponseModel?
 }

@@ -1,10 +1,10 @@
 package com.example.myapplication.data.interfaces
 
 import com.example.myapplication.domain.models.ComicResponseModel
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface ComicsDataSource {
-    fun getAll(): Observable<List<ComicResponseModel>>
-    fun insert(comics: List<ComicResponseModel>)
-    fun getOne(id: Int): ComicResponseModel?
+    suspend fun getAll(): Flow<List<ComicResponseModel>>
+    suspend fun insert(comics: List<ComicResponseModel>)
+    suspend fun getOne(id: Int): ComicResponseModel?
 }

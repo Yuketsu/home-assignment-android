@@ -13,7 +13,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
@@ -58,7 +57,6 @@ object NetworkModule {
                     moshi: Moshi): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.MARVEL_APIS_ENDPOINT)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(httpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addConverterFactory(ScalarsConverterFactory.create())
