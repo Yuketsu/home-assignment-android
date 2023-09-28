@@ -11,6 +11,8 @@ import com.example.myapplication.presentation.comics.list.mappers.ComicsListResp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,13 +38,13 @@ class ComicsListViewModel @Inject constructor(
     suspend fun getComics() {
         try {
             _comics.clear()
-            viewModelScope.launch(Dispatchers.IO){
-                getAllComicsUseCase.execute().collect { comics ->
-                    val list = comics.filter { !it.description.isNullOrEmpty() }
-                    withContext(Dispatchers.Main) {
-                        _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
+            viewModelScope.launch {
+                    getAllComicsUseCase.execute()
+                        .flowOn(Dispatchers.IO)
+                        .map { it.filter { comics -> !comics.description.isNullOrEmpty() } }
+                        .collect { list ->
+                            _comics.addAll(list.map { mapper.toComicsListResponseModel(responseModel = it) })
                     }
-                }
             }
         } catch (err: Exception) {
             _errorMessage.value = "Error Fetching Comics"
